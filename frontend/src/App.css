@@ -70,6 +70,7 @@ body {
 
 .quiz {
   max-width: 500px;
+  margin: 0 auto;
 }
 
 .quiz__progress {
@@ -127,6 +128,7 @@ button {
 
 .file-upload {
   max-width: 500px;
+  margin: 0 auto;
 }
 
 .file-upload__dropzone {
@@ -180,6 +182,7 @@ button {
 
 .chat-window {
   max-width: 600px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   height: 500px;

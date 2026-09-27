@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { uploadDocument } from '../api/client';
 
 function FileUpload() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -8,16 +9,14 @@ function FileUpload() {
     const [errorMessage, setErrorMessage] = useState('');
 
     const isValidFileType = (file) => {
-        const allowedExtensions = ['.pdf', '.docx'];
-        const fileName = file.name.toLowerCase();
-        return allowedExtensions.some((ext) => fileName.endsWith(ext));
+        return file.name.toLowerCase().endsWith('.pdf');
     };
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             if (!isValidFileType(file)) {
-                setErrorMessage('Only PDF and DOCX files are supported.');
+                setErrorMessage('Only PDF files are supported.');
                 setStatus('error');
                 return;
             }
@@ -41,7 +40,7 @@ function FileUpload() {
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             const file = e.dataTransfer.files[0];
             if (!isValidFileType(file)) {
-                setErrorMessage('Only PDF and DOCX files are supported.');
+                setErrorMessage('Only PDF files are supported.');
                 setStatus('error');
                 return;
             }
@@ -56,24 +55,9 @@ function FileUpload() {
         setErrorMessage('');
 
         try {
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || 'Upload failed');
-            }
-
-            const data = await response.json();
+            const data = await uploadDocument(selectedFile);
             console.log('Upload successful:', data);
-
             setStatus('success');
-
         } catch (error) {
             console.error(error);
             setErrorMessage(error.message);
@@ -97,19 +81,19 @@ function FileUpload() {
                 }}
                 role="button"
                 tabIndex={0}
-                aria-label="Upload a PDF or DOCX file"
+                aria-label="Upload a PDF file"
                 >
                 <input
                     ref={inputRef}
                     type="file"
-                    accept=".pdf,.docx"
+                    accept=".pdf"
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
                 />
                 {selectedFile ? (
                     <p>{selectedFile.name}</p>
                 ) : (
-                    <p>Drag & drop a file here or click to select</p>
+                    <p>Drag & drop a PDF here or click to select</p>
                 )}
             </div>
 

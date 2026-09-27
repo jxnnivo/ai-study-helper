@@ -43,3 +43,26 @@ class QueryResponse(BaseModel):
     question: str
     answer: str
     sources: list[SourceExcerpt]
+
+
+class QuizRequest(BaseModel):
+    """Body for POST /quiz."""
+
+    topic: str
+    num_questions: int = 5
+    top_k: int = 5
+
+
+class QuizQuestion(BaseModel):
+    """One multiple-choice quiz question."""
+
+    question: str
+    options: list[str]
+    correct_answer: str
+
+
+class QuizResponse(BaseModel):
+    """Returned by POST /quiz."""
+
+    topic: str
+    questions: list[QuizQuestion]

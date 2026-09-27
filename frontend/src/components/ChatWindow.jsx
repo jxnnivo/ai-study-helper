@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { askQuestion } from '../api/client';
 
 function ChatWindow() {
     const [messages, setMessages] = useState([]);
@@ -18,30 +20,15 @@ function ChatWindow() {
         setInputValue('');
         setStatus('loading');
 
-        // TODO: Replace with actual API call to send the message and receive a response
-
         try {
-            // const response = await fetch('/api/query', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ question: userMessage.text }),
-            // });
-            // if (!response.ok) {
-            // const errorData = await response.json();
-            // throw new Error(errorData.detail || 'Query failed');
-            // }
-            // const data = await response.json();
-            // const mockAnswer = { role: 'assistant', text: data.answer };
-
-            await new Promise((resolve) => setTimeout(resolve, 800));
-            const mockAnswer = { role: 'assistant', text: `Mock answer to: ${userMessage.text}` };
-
-            setMessages((prev) => [...prev, mockAnswer]);
+            const data = await askQuestion(userMessage.text);
+            const assistantMessage = { role: 'assistant', text: data.answer };
+            setMessages((prev) => [...prev, assistantMessage]);
             setStatus('idle');
-            } catch (error) {
-                console.error(error);
-                setStatus('error');
-            }
+        } catch (error) {
+            console.error(error);
+            setStatus('error');
+        }
     };
 
     return (
@@ -53,7 +40,11 @@ function ChatWindow() {
 
                 {messages.map((msg, index) => (
                     <div key={index} className={`chat-window__message chat-window__message--${msg.role}`}>
-                        <p>{msg.text}</p>
+                        {msg.role === 'assistant' ? (
+                            <ReactMarkdown>{msg.text}</ReactMarkdown>
+                        ) : (
+                            <p>{msg.text}</p>
+                        )}
                     </div>
                 ))}
 

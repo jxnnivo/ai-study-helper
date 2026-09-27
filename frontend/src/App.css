@@ -289,3 +289,17 @@ button {
   background: #ccc;
   cursor: not-allowed;
 }
+
+.chat-window__message--assistant ol,
+.chat-window__message--assistant ul {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.chat-window__message--assistant li {
+  margin-bottom: 0.4em;
+}
+
+.chat-window__message--assistant p {
+  margin: 0 0 0.5em 0;
+}
